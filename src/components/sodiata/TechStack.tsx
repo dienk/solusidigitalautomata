@@ -2,54 +2,18 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
 
-const layers = [
-  {
-    num: 5,
-    title: "AI & Intelligence Layer",
-    desc: "Model prediktif, NLP, computer vision, dan otomatisasi berbasis kecerdasan buatan.",
-    tags: ["TensorFlow", "PyTorch", "OpenAI API", "LangChain", "Hugging Face"],
-  },
-  {
-    num: 4,
-    title: "Application Layer",
-    desc: "Aplikasi web & mobile custom yang cepat, aman, dan skalabel untuk kebutuhan bisnis.",
-    tags: ["Next.js", "React Native", "Node.js", "FastAPI", "GraphQL"],
-  },
-  {
-    num: 3,
-    title: "Integration Layer",
-    desc: "Middleware dan API gateway yang menghubungkan semua sistem secara real-time.",
-    tags: ["REST API", "gRPC", "Kafka", "RabbitMQ", "Webhooks"],
-  },
-  {
-    num: 2,
-    title: "Data & IoT Layer",
-    desc: "Penyimpanan, streaming, dan pemrosesan data dari sensor IoT hingga data warehouse.",
-    tags: ["PostgreSQL", "MongoDB", "InfluxDB", "MQTT", "Edge Computing"],
-  },
-  {
-    num: 1,
-    title: "Infrastructure Layer",
-    desc: "Cloud-native infrastructure dengan keamanan enterprise dan SLA 99.9% uptime.",
-    tags: ["AWS", "Google Cloud", "Azure", "Kubernetes", "Terraform"],
-  },
-];
-
-const industries = [
-  { name: "Manufaktur", count: "18 Proyek" },
-  { name: "Logistik", count: "12 Proyek" },
-  { name: "Keuangan", count: "9 Proyek" },
-  { name: "Retail & E-Com", count: "11 Proyek" },
-];
-
-const results = [
-  { label: "Rata-rata pengurangan downtime", value: "73%" },
-  { label: "Peningkatan efisiensi operasional", value: "58%" },
-  { label: "ROI rata-rata dalam 12 bulan", value: "3.2×" },
+const layerTags = [
+  ["TensorFlow", "PyTorch", "OpenAI API", "LangChain", "Hugging Face"],
+  ["Next.js", "React Native", "Node.js", "FastAPI", "GraphQL"],
+  ["REST API", "gRPC", "Kafka", "RabbitMQ", "Webhooks"],
+  ["PostgreSQL", "MongoDB", "InfluxDB", "MQTT", "Edge Computing"],
+  ["AWS", "Google Cloud", "Azure", "Kubernetes", "Terraform"],
 ];
 
 export default function TechStack() {
+  const { t } = useI18n();
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -75,17 +39,15 @@ export default function TechStack() {
           className="text-center mb-6"
         >
           <span className="text-xs tracking-[0.25em] text-sodiata-cyan font-medium uppercase">
-            Stack Teknologi
+            {t.tech.sectionTag}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 mb-4 leading-tight">
-            Arsitektur Digital
+            {t.tech.sectionTitle.line1}
             <br />
-            <span className="gradient-text">5 Lapisan</span>
+            <span className="gradient-text">{t.tech.sectionTitle.highlight}</span>
           </h2>
           <p className="text-sodiata-text-muted max-w-2xl mx-auto text-base leading-relaxed">
-            Setiap solusi Sodiata dibangun di atas arsitektur berlapis yang
-            terintegrasi — dari infrastruktur cloud hingga kecerdasan buatan —
-            memastikan sistem yang andal, skalabel, dan siap masa depan.
+            {t.tech.sectionDesc}
           </p>
         </motion.div>
 
@@ -93,9 +55,9 @@ export default function TechStack() {
         <div className="mt-14 grid lg:grid-cols-[1fr_320px] gap-8">
           {/* Layers */}
           <div className="space-y-3">
-            {layers.map((layer, i) => (
+            {t.tech.layers.map((layer, i) => (
               <motion.div
-                key={layer.num}
+                key={5 - i}
                 initial={{ opacity: 0, x: -30 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.1 * i }}
@@ -107,7 +69,7 @@ export default function TechStack() {
                       L
                     </span>
                     <span className="text-2xl font-bold text-sodiata-cyan/30 group-hover:text-sodiata-cyan/60 transition-colors duration-300 font-mono">
-                      {layer.num}
+                      {5 - i}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
@@ -118,10 +80,10 @@ export default function TechStack() {
                       {layer.desc}
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {layer.tags.map((tag) => (
+                      {layerTags[i].map((tag) => (
                         <span
                           key={tag}
-                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-sodiata-bg/80 text-sodiata-cyan/70 border border-sodiata-border"
+                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-sodiata-elevated/80 text-sodiata-cyan/70 border border-sodiata-border"
                         >
                           {tag}
                         </span>
@@ -135,7 +97,7 @@ export default function TechStack() {
             {/* Arrow label */}
             <div className="flex justify-center pt-2">
               <span className="text-[10px] tracking-wider text-sodiata-text-dim font-mono uppercase">
-                Foundation → Intelligence
+                {t.tech.arrowLabel}
               </span>
             </div>
           </div>
@@ -150,10 +112,10 @@ export default function TechStack() {
               className="glass-card rounded-xl p-6"
             >
               <h3 className="text-sm font-semibold text-white mb-4">
-                INDUSTRI YANG KAMI LAYANI
+                {t.tech.industries.title}
               </h3>
               <div className="space-y-3">
-                {industries.map((ind) => (
+                {t.tech.industries.list.map((ind) => (
                   <div
                     key={ind.name}
                     className="flex items-center justify-between py-1.5"
@@ -175,10 +137,10 @@ export default function TechStack() {
               className="glass-card rounded-xl p-6"
             >
               <h3 className="text-sm font-semibold text-white mb-4">
-                HASIL TERUKUR KLIEN KAMI
+                {t.tech.results.title}
               </h3>
               <div className="space-y-4">
-                {results.map((r) => (
+                {t.tech.results.list.map((r) => (
                   <div key={r.label}>
                     <p className="text-xs text-sodiata-text-muted mb-1">
                       {r.label}
@@ -201,11 +163,10 @@ export default function TechStack() {
               <ShieldIcon className="w-8 h-8 text-sodiata-cyan flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-semibold text-white">
-                  ISO 27001 Ready
+                  {t.tech.iso.title}
                 </p>
                 <p className="text-xs text-sodiata-text-muted mt-1 leading-relaxed">
-                  Standar keamanan informasi internasional diterapkan di seluruh
-                  proses pengembangan.
+                  {t.tech.iso.desc}
                 </p>
               </div>
             </motion.div>

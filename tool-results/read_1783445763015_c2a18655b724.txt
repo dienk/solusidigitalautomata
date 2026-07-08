@@ -1,0 +1,514 @@
+     1→"use client";
+     2→
+     3→import { useRef, useEffect, useState } from "react";
+     4→import { motion } from "framer-motion";
+     5→import { ArrowRight, X, CheckCircle2, Server, Code2, Link2, Cpu, BrainCircuit, ShoppingBag, Layers } from "lucide-react";
+     6→import {
+     7→  Dialog,
+     8→  DialogContent,
+     9→  DialogHeader,
+    10→  DialogTitle,
+    11→} from "@/components/ui/dialog";
+    12→import { Badge } from "@/components/ui/badge";
+    13→import ServiceWorkflow, { type WorkflowStep } from "@/components/sodiata/ServiceWorkflow";
+    14→
+    15→const services = [
+    16→  {
+    17→    icon: Server,
+    18→    tag: "INFRASTRUCTURE",
+    19→    title: "Solusi IT Perusahaan",
+    20→    shortDesc: "Infrastruktur IT, keamanan siber, dan cloud computing skala enterprise.",
+    21→    href: "#layanan-infrastructure",
+    22→    detail: {
+    23→      overview:
+    24→        "Kami menyediakan fondasi infrastruktur IT yang kokoh dan skalabel untuk mendukung operasional bisnis enterprise Anda. Dari perencanaan arsitektur hingga implementasi dan pemeliharaan berkelanjutan, tim kami memastikan seluruh infrastruktur berjalan optimal dengan SLA 99.9% uptime.",
+    25→      features: [
+    26→        "Cloud Migration & Management (AWS, Google Cloud, Azure) — migrasi seamless dari on-premise ke cloud dengan minimal downtime",
+    27→        "Network Infrastructure — desain dan implementasi jaringan enterprise termasuk SD-WAN, VPN, dan load balancing",
+    28→        "Cybersecurity Solutions — firewall enterprise, intrusion detection system (IDS), endpoint protection, dan security operations center (SOC)",
+    29→        "Disaster Recovery & Business Continuity — strategi backup, failover otomatis, dan recovery plan teruji",
+    30→        "Server & Data Center Management — provisioning, monitoring, dan optimasi server fisik maupun virtual",
+    31→        "IT Governance & Compliance — kebijakan IT, audit keamanan, dan kepatuhan terhadap regulasi (ISO 27001, SOC 2)",
+    32→      ],
+    33→      deliverables: [
+    34→        "Arsitektur infrastruktur cloud-native",
+    35→        "Setup monitoring 24/7 dengan alerting",
+    36→        "Dokumentasi topology & runbook",
+    37→        "Pelatihan tim internal IT",
+    38→      ],
+    39→      tech: ["AWS", "Google Cloud", "Azure", "Kubernetes", "Terraform", "Docker", "Prometheus", "Grafana"],
+    40→      workflow: [
+    41→        { label: "Assessment", sublabel: "Audit infrastruktur & kebutuhan", icon: "search" },
+    42→        { label: "Architecture", sublabel: "Desain topologi cloud-native", icon: "layers" },
+    43→        { label: "Provisioning", sublabel: "Setup server & jaringan", icon: "server" },
+    44→        { label: "Security", sublabel: "Implementasi keamanan siber", icon: "shield" },
+    45→        { label: "Migration", sublabel: "Migrasi data & aplikasi", icon: "database" },
+    46→        { label: "Monitoring", sublabel: "Monitoring 24/7 & alerting", icon: "monitor" },
+    47→        { label: "Optimization", sublabel: "Tuning performa & skalabilitas", icon: "cog" },
+    48→      ] as WorkflowStep[],
+    49→    },
+    50→  },
+    51→  {
+    52→    icon: Code2,
+    53→    tag: "CUSTOM DEV",
+    54→    title: "Aplikasi Pendukung Bisnis",
+    55→    shortDesc: "Custom Web & Mobile Apps (Android/iOS) sesuai kebutuhan operasional.",
+    56→    href: "#layanan-custom-dev",
+    57→    detail: {
+    58→      overview:
+    59→        "Sodiata mengembangkan aplikasi web dan mobile yang disesuaikan sepenuhnya dengan kebutuhan operasional bisnis Anda. Dengan pendekatan agile development, kami memastikan setiap fitur dibangun tepat sasaran, teruji secara menyeluruh, dan siap digunakan oleh pengguna akhir.",
+    60→      features: [
+    61→        "Web Application Development — aplikasi web responsif dan progresif (PWA) menggunakan framework modern seperti Next.js dan React",
+    62→        "Mobile App Development (Android & iOS) — aplikasi native maupun cross-platform menggunakan React Native untuk efisiensi pengembangan",
+    63→        "Dashboard & Analytics — dashboard interaktif untuk visualisasi data bisnis real-time dengan chart dan laporan yang mudah dipahami",
+    64→        "Workflow Automation Apps — aplikasi otomasi alur kerja yang mengurangi proses manual dan meningkatkan produktivitas tim",
+    65→        "Internal Tools & Portals — sistem manajemen internal, employee portal, dan admin panel yang intuitif",
+    66→        "API-First Development — arsitektur API yang robust dan terdokumentasi untuk memudahkan integrasi ke depannya",
+    67→      ],
+    68→      deliverables: [
+    69→        "Aplikasi production-ready dengan CI/CD pipeline",
+    70→        "Dokumentasi API (Swagger/OpenAPI)",
+    71→        "Manual pengguna & panduan deploy",
+    72→        "Garansi bug fixing 3 bulan pasca-launch",
+    73→      ],
+    74→      tech: ["Next.js", "React Native", "Node.js", "TypeScript", "PostgreSQL", "Redis", "Docker", "GitHub Actions"],
+    75→      workflow: [
+    76→        { label: "Discovery", sublabel: "Analisis kebutuhan bisnis", icon: "search" },
+    77→        { label: "Planning", sublabel: "Sprint planning & roadmap", icon: "workflow" },
+    78→        { label: "UI/UX Design", sublabel: "Wireframe & prototyping", icon: "pencil" },
+    79→        { label: "Development", sublabel: "Iteratif per sprint (2 minggu)", icon: "gitBranch" },
+    80→        { label: "QA Testing", sublabel: "Unit, integration & UAT", icon: "testTube" },
+    81→        { label: "Deployment", sublabel: "CI/CD ke production", icon: "rocket" },
+    82→        { label: "Support", sublabel: "Bug fixing & maintenance", icon: "refreshCw" },
+    83→      ] as WorkflowStep[],
+    84→    },
+    85→  },
+    86→  {
+    87→    icon: Link2,
+    88→    tag: "INTEGRATION",
+    89→    title: "Integrasi Sistem (S2S)",
+    90→    shortDesc: "API management, menghubungkan sistem legacy dengan sistem baru.",
+    91→    href: "#layanan-integration",
+    92→    detail: {
+    93→      overview:
+    94→        "Banyak enterprise memiliki beragam sistem yang berjalan terpisah — mulai dari sistem legacy, aplikasi pihak ketiga, hingga platform cloud modern. Sodiata membantu menghubungkan seluruh ekosistem ini menjadi satu kesatuan yang terintegrasi melalui arsitektur API dan middleware yang reliable.",
+    95→      features: [
+    96→        "API Gateway & Management — centralisasi seluruh API dengan authentication, rate limiting, dan analytics menggunakan Kong atau AWS API Gateway",
+    97→        "Legacy System Integration — koneksi ke sistem lama (AS/400, mainframe, database lawas) melalui adapter dan wrapper modern",
+    98→        "Enterprise Service Bus (ESB) — middleware untuk routing dan transformasi data antar sistem secara real-time",
+    99→        "Data Synchronization — sinkronisasi data dua arah antar sistem dengan conflict resolution dan retry mechanism",
+   100→        "Webhook & Event-Driven Integration — arsitektur event-based menggunakan message queue untuk komunikasi asinkron antar layanan",
+   101→        "Third-Party Integration — koneksi ke platform seperti SAP, Salesforce, Google Workspace, dan berbagai SaaS lainnya",
+   102→      ],
+   103→      deliverables: [
+   104→        "Arsitektur integrasi end-to-end",
+   105→        "API documentation & versioning strategy",
+   106→        "Monitoring dashboard untuk semua connection",
+   107→        "SLA untuk response time & availability",
+   108→      ],
+   109→      tech: ["REST API", "gRPC", "GraphQL", "Apache Kafka", "RabbitMQ", "MuleSoft", "Kong", "Webhooks"],
+   110→      workflow: [
+   111→        { label: "System Audit", sublabel: "Pemetaan seluruh sistem", icon: "search" },
+   112→        { label: "Architecture", sublabel: "Desain API & middleware", icon: "layers" },
+   113→        { label: "Adapter Dev", sublabel: "Bangun koneksi ke tiap sistem", icon: "gitBranch" },
+   114→        { label: "Data Mapping", sublabel: "Transformasi & validasi data", icon: "database" },
+   115→        { label: "Testing", sublabel: "End-to-end integration test", icon: "testTube" },
+   116→        { label: "Go-Live", sublabel: "Deployment & cutover", icon: "rocket" },
+   117→        { label: "Monitoring", sublabel: "Log & SLA monitoring", icon: "monitor" },
+   118→      ] as WorkflowStep[],
+   119→    },
+   120→  },
+   121→  {
+   122→    icon: Cpu,
+   123→    tag: "IOT",
+   124→    title: "Penerapan IoT",
+   125→    shortDesc: "Sensor pintar, automasi industri, monitoring aset real-time.",
+   126→    href: "#layanan-iot",
+   127→    detail: {
+   128→      overview:
+   129→        "Sodiata membantu enterprise memanfaatkan kekuatan Internet of Things untuk mengotomasi proses industri, memonitor aset secara real-time, dan mengambil keputusan berbasis data. Dari pemasangan sensor hingga dashboard analitik, kami menyediakan solusi IoT end-to-end.",
+   130→      features: [
+   131→        "Industrial IoT (IIoT) — sensor dan aktuator untuk monitoring kondisi mesin, suhu, tekanan, getaran, dan parameter produksi lainnya secara real-time",
+   132→        "Smart Asset Tracking — pelacakan lokasi dan kondisi aset menggunakan GPS, RFID, dan Bluetooth Low Energy (BLE)",
+   133→        "Predictive Maintenance — analisis data sensor dengan machine learning untuk memprediksi kegagalan mesin sebelum terjadi, mengurangi downtime hingga 60%",
+   134→        "SCADA & HMI Integration — integrasi dengan sistem kontrol industri yang sudah ada untuk memperluas kapabilitas monitoring",
+   135→        "Edge Computing — pemrosesan data di titik edge untuk respons real-time tanpa bergantung pada koneksi cloud",
+   136→        "IoT Dashboard & Alerting — dashboard terpusat untuk memantau seluruh device, dengan alert otomatis saat terjadi anomali",
+   137→      ],
+   138→      deliverables: [
+   139→        "Instalasi & konfigurasi sensor di lapangan",
+   140→        "IoT platform dengan dashboard real-time",
+   141→        "Sistem alerting & notifikasi otomatis",
+   142→        "Pelatihan operator & dokumentasi teknis",
+   143→      ],
+   144→      tech: ["MQTT", "InfluxDB", "Grafana", "Edge Computing", "Arduino", "Raspberry Pi", "LoRaWAN", "Node-RED"],
+   145→      workflow: [
+   146→        { label: "Site Survey", sublabel: "Assesmen lapangan & kebutuhan", icon: "search" },
+   147→        { label: "Sensor Setup", sublabel: "Instalasi sensor & gateway", icon: "box" },
+   148→        { label: "Edge Deploy", sublabel: "Setup edge computing node", icon: "server" },
+   149→        { label: "Data Pipeline", sublabel: "MQTT broker & data ingestion", icon: "database" },
+   150→        { label: "Analytics", sublabel: "Dashboard & ML model", icon: "brain" },
+   151→        { label: "Automation", sublabel: "Rule-based alerting & actuator", icon: "zap" },
+   152→        { label: "Maintenance", sublabel: "Kalibrasi & support berkelanjutan", icon: "refreshCw" },
+   153→      ] as WorkflowStep[],
+   154→    },
+   155→  },
+   156→  {
+   157→    icon: BrainCircuit,
+   158→    tag: "AI & ML",
+   159→    title: "Implementasi AI",
+   160→    shortDesc: "Analisis data prediktif, machine learning, dan otomatisasi proses bisnis.",
+   161→    href: "#layanan-ai-ml",
+   162→    detail: {
+   163→      overview:
+   164→        "Sodiata mengimplementasikan solusi Artificial Intelligence dan Machine Learning yang konkret dan memberikan dampak nyata pada bisnis Anda. Kami tidak hanya membangun model — kami memastikan model tersebut terintegrasi ke dalam proses bisnis dan menghasilkan ROI yang terukur.",
+   165→      features: [
+   166→        "Predictive Analytics — model prediksi untuk demand forecasting, churn prediction, dan risk assessment berdasarkan data historis perusahaan",
+   167→        "Natural Language Processing (NLP) — chatbot cerdas, analisis sentimen, document processing, dan text extraction untuk otomatisasi layanan pelanggan",
+   168→        "Computer Vision — sistem pengenalan objek, OCR, quality inspection otomatis, dan analisis citra untuk konteks industri",
+   169→        "Process Automation (RPA + AI) — otomatisasi proses bisnis repetitif yang dikombinasikan dengan AI untuk penanganan kasus yang lebih kompleks",
+   170→        "Recommendation Engine — sistem rekomendasi personal untuk meningkatkan engagement dan conversion di platform digital Anda",
+   171→        "AI-Powered Analytics — dashboard analitik yang dilengkapi insight otomatis, anomaly detection, dan natural language querying",
+   172→      ],
+   173→      deliverables: [
+   174→        "Model ML yang terlatih & di-deploy ke production",
+   175→        "API endpoint untuk integrasi ke sistem existing",
+   176→        "Laporan performa model & monitoring drift",
+   177→        "Workshop AI literacy untuk tim bisnis",
+   178→      ],
+   179→      tech: ["Python", "TensorFlow", "PyTorch", "OpenAI API", "LangChain", "Hugging Face", "FastAPI", "MLflow"],
+   180→      workflow: [
+   181→        { label: "Data Audit", sublabel: "Identifikasi sumber & kualitas data", icon: "search" },
+   182→        { label: "Preprocessing", sublabel: "Cleansing, labeling & feature eng", icon: "database" },
+   183→        { label: "Modeling", sublabel: "Training & hyperparameter tuning", icon: "brain" },
+   184→        { label: "Evaluation", sublabel: "Testing akurasi & benchmark", icon: "testTube" },
+   185→        { label: "Deployment", sublabel: "API endpoint ke production", icon: "rocket" },
+   186→        { label: "Monitoring", sublabel: "Drift detection & retraining", icon: "monitor" },
+   187→        { label: "Iteration", sublabel: "Feedback loop & improvement", icon: "refreshCw" },
+   188→      ] as WorkflowStep[],
+   189→    },
+   190→  },
+   191→  {
+   192→    icon: ShoppingBag,
+   193→    tag: "E-COMMERCE",
+   194→    title: "Marketplace Integrator",
+   195→    shortDesc: "Sinkronisasi stok, produk, dan pesanan antar marketplace secara terpusat.",
+   196→    href: "#layanan-ecommerce",
+   197→    detail: {
+   198→      overview:
+   199→        "Bagi enterprise yang berjualan di berbagai marketplace, mengelola stok, produk, dan pesanan secara terpisah adalah tantangan besar. Sodiata membangun sistem integrator terpusat yang menyinkronkan seluruh data antar marketplace dalam satu platform, menghilangkan inkonsistensi dan menghemat waktu operasional.",
+   200→      features: [
+   201→        "Multi-Marketplace Sync — sinkronisasi real-time antar Tokopedia, Shopee, Lazada, Bukalapak, Blibli, dan marketplace lainnya dari satu dashboard",
+   202→        "Inventory Management Terpusat — pengelolaan stok otomatis yang meng-update di seluruh channel penjualan saat ada transaksi atau restock",
+   203→        "Order Management System — pemusatan seluruh pesanan dari berbagai marketplace dengan workflow fulfillment yang bisa dikustomisasi",
+   204→        "Product Catalog Management — kelola ribuan SKU dengan mass upload, variant management, dan template deskripsi produk",
+   205→        "Pricing & Promotion Engine — atur harga dinamis dan promosi lintas marketplace dengan rule-based pricing engine",
+   206→        "Analytics & Reporting — laporan penjualan terkonsolidasi, analisis performa per marketplace, dan insight untuk optimasi strategi penjualan",
+   207→      ],
+   208→      deliverables: [
+   209→        "Platform integrator multi-marketplace",
+   210→        "Koneksi API ke seluruh marketplace target",
+   211→        "Dashboard analytics & laporan otomatis",
+   212→        "Onboarding & training tim operasional",
+   213→      ],
+   214→      tech: ["Node.js", "Redis", "PostgreSQL", "REST API", "Webhooks", "Message Queue", "Cron Jobs", "React"],
+   215→      workflow: [
+   216→        { label: "Onboarding", sublabel: "Registrasi seller & akun API", icon: "users" },
+   217→        { label: "Catalog Setup", sublabel: "Import SKU & mapping produk", icon: "database" },
+   218→        { label: "Integration", sublabel: "Koneksi API tiap marketplace", icon: "gitBranch" },
+   219→        { label: "Sync Engine", sublabel: "Real-time stock & order sync", icon: "refreshCw" },
+   220→        { label: "Testing", sublabel: "Uji sinkronisasi end-to-end", icon: "testTube" },
+   221→        { label: "Go-Live", sublabel: "Launch & monitoring awal", icon: "rocket" },
+   222→        { label: "Optimization", sublabel: "Tuning & tambah marketplace", icon: "cog" },
+   223→      ] as WorkflowStep[],
+   224→    },
+   225→  },
+   226→  {
+   227→    icon: Layers,
+   228→    tag: "ERP",
+   229→    title: "ERP Partner System",
+   230→    shortDesc: "Implementasi dan kustomisasi ERP (Odoo, SAP, custom) untuk efisiensi bisnis.",
+   231→    href: "#layanan-erp",
+   232→    detail: {
+   233→      overview:
+   234→        "Sistem ERP adalah tulang punggung operasional enterprise. Sodiata membantu implementasi, kustomisasi, dan integrasi ERP — baik menggunakan platform seperti Odoo dan SAP, maupun membangun sistem ERP custom yang sepenuhnya disesuaikan dengan proses bisnis unik perusahaan Anda.",
+   235→      features: [
+   236→        "Odoo Implementation — implementasi modul Odoo (Sales, Inventory, Accounting, HR, Manufacturing, dll.) yang dikonfigurasi sesuai kebutuhan bisnis Indonesia",
+   237→        "SAP Integration — integrasi dan kustomisasi SAP Business One / S/4HANA untuk enterprise berskala besar dengan kompleksitas tinggi",
+   238→        "Custom ERP Development — pembangunan sistem ERP dari nol menggunakan arsitektur microservices untuk fleksibilitas maksimal",
+   239→        "Module Development — pengembangan modul tambahan yang tidak tersedia di ERP standar, seperti approval workflow khusus atau integrasi dengan sistem pemerintah",
+   240→        "Data Migration — migrasi data dari sistem lama ke ERP baru dengan validasi, cleansing, dan rekonsiliasi data yang teliti",
+   241→        "Change Management — pendampingan transformasi proses bisnis, pelatihan pengguna, dan dukungan pasca-implementasi",
+   242→      ],
+   243→      deliverables: [
+   244→        "ERP system yang terimplementasi & terintegrasi",
+   245→        "Kustomisasi modul sesuai requirement",
+   246→        "Migrasi data dari sistem lama",
+   247→        "Pelatihan comprehensive & support pasca-go-live",
+   248→      ],
+   249→      tech: ["Odoo", "SAP B1", "Python", "PostgreSQL", "REST API", "Microservices", "Docker", "CI/CD"],
+   250→      workflow: [
+   251→        { label: "Business Analysis", sublabel: "Pemetaan proses bisnis (AS-IS)", icon: "search" },
+   252→        { label: "Configuration", sublabel: "Setup modul & workflow ERP", icon: "cog" },
+   253→        { label: "Customization", sublabel: "Modul tambahan & integrasi", icon: "gitBranch" },
+   254→        { label: "Data Migration", sublabel: "Cleansing & migrasi data lama", icon: "database" },
+   255→        { label: "UAT", sublabel: "User acceptance testing", icon: "testTube" },
+   256→        { label: "Training", sublabel: "Pelatihan super user & end user", icon: "users" },
+   257→        { label: "Go-Live", sublabel: "Launch & support pasca-implementasi", icon: "check" },
+   258→      ] as WorkflowStep[],
+   259→    },
+   260→  },
+   261→];
+   262→
+   263→const containerVariants = {
+   264→  hidden: {},
+   265→  visible: {
+   266→    transition: {
+   267→      staggerChildren: 0.08,
+   268→    },
+   269→  },
+   270→};
+   271→
+   272→const cardVariants = {
+   273→  hidden: { opacity: 0, y: 40 },
+   274→  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+   275→};
+   276→
+   277→export default function Services() {
+   278→  const ref = useRef<HTMLElement>(null);
+   279→  const [inView, setInView] = useState(false);
+   280→  const [activeService, setActiveService] = useState<typeof services[number] | null>(null);
+   281→  const [dialogOpen, setDialogOpen] = useState(false);
+   282→
+   283→  useEffect(() => {
+   284→    const el = ref.current;
+   285→    if (!el) return;
+   286→    const obs = new IntersectionObserver(
+   287→      ([e]) => { if (e.isIntersecting) setInView(true); },
+   288→      { threshold: 0.1 }
+   289→    );
+   290→    obs.observe(el);
+   291→    return () => obs.disconnect();
+   292→  }, []);
+   293→
+   294→  const openDetail = (service: typeof services[number]) => {
+   295→    setActiveService(service);
+   296→    setDialogOpen(true);
+   297→  };
+   298→
+   299→  return (
+   300→    <section id="layanan" ref={ref} className="py-24 relative">
+   301→      <div className="absolute inset-0 bg-gradient-to-b from-sodiata-bg via-sodiata-bg-card/30 to-sodiata-bg" />
+   302→
+   303→      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+   304→        {/* Section Header */}
+   305→        <motion.div
+   306→          initial={{ opacity: 0, y: 30 }}
+   307→          animate={inView ? { opacity: 1, y: 0 } : {}}
+   308→          transition={{ duration: 0.5 }}
+   309→          className="text-center mb-16"
+   310→        >
+   311→          <span className="text-xs tracking-[0.25em] text-sodiata-cyan font-medium uppercase">
+   312→            Layanan Kami
+   313→          </span>
+   314→          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 mb-4 leading-tight">
+   315→            7 Pilar Solusi Digital
+   316→            <br />
+   317→            <span className="gradient-text">Enterprise</span>
+   318→          </h2>
+   319→          <p className="text-sodiata-text-muted max-w-2xl mx-auto text-base leading-relaxed">
+   320→            Dari infrastruktur dasar hingga kecerdasan buatan — Sodiata
+   321→            menghadirkan ekosistem teknologi lengkap untuk transformasi digital
+   322→            bisnis Anda.
+   323→          </p>
+   324→        </motion.div>
+   325→
+   326→        {/* Service Cards Grid */}
+   327→        <motion.div
+   328→          variants={containerVariants}
+   329→          initial="hidden"
+   330→          animate={inView ? "visible" : "hidden"}
+   331→          className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+   332→        >
+   333→          {services.map((service) => (
+   334→            <motion.div
+   335→              key={service.tag}
+   336→              variants={cardVariants}
+   337→              onClick={() => openDetail(service)}
+   338→              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDetail(service); } }}
+   339→              role="button"
+   340→              tabIndex={0}
+   341→              className="group glass-card rounded-xl p-6 hover:border-sodiata-cyan/30 transition-all duration-500 hover:shadow-[0_0_30px_rgba(56,189,248,0.08)] cursor-pointer"
+   342→            >
+   343→              <span className="text-[10px] tracking-[0.15em] text-sodiata-cyan/70 font-semibold uppercase">
+   344→                {service.tag}
+   345→              </span>
+   346→              <div className="mt-4 mb-3 w-10 h-10 rounded-lg bg-sodiata-cyan/10 flex items-center justify-center group-hover:bg-sodiata-cyan/20 transition-colors duration-300">
+   347→                <service.icon className="w-5 h-5 text-sodiata-cyan" />
+   348→              </div>
+   349→              <h3 className="text-base font-semibold text-white mb-2 group-hover:text-sodiata-cyan transition-colors duration-300">
+   350→                {service.title}
+   351→              </h3>
+   352→              <p className="text-sm text-sodiata-text-muted leading-relaxed mb-4">
+   353→                {service.shortDesc}
+   354→              </p>
+   355→              <span className="inline-flex items-center gap-1 text-xs text-sodiata-cyan/80 group-hover:text-sodiata-cyan transition-colors duration-300">
+   356→                Pelajari Lebih
+   357→                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+   358→              </span>
+   359→            </motion.div>
+   360→          ))}
+   361→        </motion.div>
+   362→      </div>
+   363→
+   364→      {/* Service Detail Dialog */}
+   365→      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+   366→        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-sodiata-bg border-sodiata-border text-sodiata-text p-0 [&>button]:hidden">
+   367→          {activeService && (
+   368→            <>
+   369→              {/* Dialog Header with gradient */}
+   370→              <div className="relative px-6 sm:px-8 pt-8 pb-6 border-b border-sodiata-border">
+   371→                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sodiata-cyan via-cyan-500 to-sodiata-cyan/50" />
+   372→                <button
+   373→                  onClick={() => setDialogOpen(false)}
+   374→                  className="absolute top-4 right-4 w-8 h-8 rounded-full border border-sodiata-border flex items-center justify-center text-sodiata-text-muted hover:text-white hover:border-sodiata-cyan/50 transition-all"
+   375→                >
+   376→                  <X className="w-4 h-4" />
+   377→                </button>
+   378→
+   379→                <div className="flex items-start gap-4">
+   380→                  <div className="w-12 h-12 rounded-xl bg-sodiata-cyan/10 border border-sodiata-cyan/20 flex items-center justify-center flex-shrink-0">
+   381→                    <activeService.icon className="w-6 h-6 text-sodiata-cyan" />
+   382→                  </div>
+   383→                  <div>
+   384→                    <span className="text-[10px] tracking-[0.2em] text-sodiata-cyan/70 font-semibold uppercase">
+   385→                      {activeService.tag}
+   386→                    </span>
+   387→                    <DialogHeader className="mt-1">
+   388→                      <DialogTitle className="text-xl sm:text-2xl font-bold text-white text-left">
+   389→                        {activeService.title}
+   390→                      </DialogTitle>
+   391→                    </DialogHeader>
+   392→                  </div>
+   393→                </div>
+   394→              </div>
+   395→
+   396→              {/* Dialog Body */}
+   397→              <div className="px-6 sm:px-8 py-6 space-y-8">
+   398→                {/* Overview */}
+   399→                <div>
+   400→                  <p className="text-sm text-sodiata-text-muted leading-relaxed">
+   401→                    {activeService.detail.overview}
+   402→                  </p>
+   403→                </div>
+   404→
+   405→                {/* Features */}
+   406→                <div>
+   407→                  <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+   408→                    <div className="w-1 h-4 rounded-full bg-sodiata-cyan" />
+   409→                    Fitur Utama
+   410→                  </h4>
+   411→                  <div className="space-y-3">
+   412→                    {activeService.detail.features.map((feature, i) => {
+   413→                      const boldPart = feature.split(" — ")[0];
+   414→                      const descPart = feature.split(" — ")[1];
+   415→                      return (
+   416→                        <div
+   417→                          key={i}
+   418→                          className="flex gap-3 p-3 rounded-lg bg-sodiata-bg-card/50 border border-sodiata-border/50 hover:border-sodiata-cyan/20 transition-colors duration-300"
+   419→                        >
+   420→                          <CheckCircle2 className="w-4 h-4 text-sodiata-cyan flex-shrink-0 mt-0.5" />
+   421→                          <div>
+   422→                            <p className="text-sm font-medium text-white">
+   423→                              {boldPart}
+   424→                            </p>
+   425→                            {descPart && (
+   426→                              <p className="text-xs text-sodiata-text-muted mt-0.5 leading-relaxed">
+   427→                                {descPart}
+   428→                              </p>
+   429→                            )}
+   430→                          </div>
+   431→                        </div>
+   432→                      );
+   433→                    })}
+   434→                  </div>
+   435→                </div>
+   436→
+   437→                {/* Deliverables */}
+   438→                <div>
+   439→                  <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+   440→                    <div className="w-1 h-4 rounded-full bg-cyan-500" />
+   441→                    Deliverables
+   442→                  </h4>
+   443→                  <div className="grid sm:grid-cols-2 gap-3">
+   444→                    {activeService.detail.deliverables.map((d, i) => (
+   445→                      <div
+   446→                        key={i}
+   447→                        className="flex items-start gap-2.5 p-3 rounded-lg border border-sodiata-border/50"
+   448→                      >
+   449→                        <div className="w-5 h-5 rounded-md bg-sodiata-cyan/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+   450→                          <span className="text-[10px] font-bold text-sodiata-cyan">
+   451→                            {i + 1}
+   452→                          </span>
+   453→                        </div>
+   454→                        <p className="text-sm text-sodiata-text-muted leading-relaxed">
+   455→                          {d}
+   456→                        </p>
+   457→                      </div>
+   458→                    ))}
+   459→                  </div>
+   460→                </div>
+   461→
+   462→                {/* Workflow Infographic */}
+   463→                <div>
+   464→                  {"workflow" in activeService.detail && activeService.detail.workflow && (
+   465→                    <ServiceWorkflow
+   466→                      steps={activeService.detail.workflow}
+   467→                      title="Alur Kerja Implementasi"
+   468→                    />
+   469→                  )}
+   470→                </div>
+   471→
+   472→                {/* Tech Stack */}
+   473→                <div>
+   474→                  <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+   475→                    <div className="w-1 h-4 rounded-full bg-cyan-400" />
+   476→                    Teknologi yang Digunakan
+   477→                  </h4>
+   478→                  <div className="flex flex-wrap gap-2">
+   479→                    {activeService.detail.tech.map((t) => (
+   480→                      <Badge
+   481→                        key={t}
+   482→                        variant="outline"
+   483→                        className="px-3 py-1.5 text-xs font-mono border-sodiata-border text-sodiata-cyan/80 bg-sodiata-bg-card/50 hover:bg-sodiata-cyan/10 hover:text-sodiata-cyan transition-colors duration-300"
+   484→                      >
+   485→                        {t}
+   486→                      </Badge>
+   487→                    ))}
+   488→                  </div>
+   489→                </div>
+   490→              </div>
+   491→
+   492→              {/* Dialog Footer */}
+   493→              <div className="px-6 sm:px-8 py-5 border-t border-sodiata-border flex flex-col sm:flex-row gap-3 sm:justify-end bg-sodiata-bg-card/30">
+   494→                <button
+   495→                  onClick={() => setDialogOpen(false)}
+   496→                  className="px-5 py-2.5 rounded-lg border border-sodiata-border text-sm text-sodiata-text-muted hover:text-white hover:border-sodiata-cyan/30 transition-all duration-300"
+   497→                >
+   498→                  Tutup
+   499→                </button>
+   500→                <a
+   501→                  href="#kontak"
+   502→                  onClick={() => setDialogOpen(false)}
+   503→                  className="px-5 py-2.5 rounded-lg bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-bg text-sm font-semibold text-center transition-all duration-300 hover:shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+   504→                >
+   505→                  Konsultasi Layanan Ini
+   506→                </a>
+   507→              </div>
+   508→            </>
+   509→          )}
+   510→        </DialogContent>
+   511→      </Dialog>
+   512→    </section>
+   513→  );
+   514→}

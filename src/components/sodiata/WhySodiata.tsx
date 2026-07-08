@@ -3,37 +3,12 @@
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Award, Cpu, ShieldCheck, Headphones } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
-const features = [
-  {
-    icon: Award,
-    title: "Berpengalaman",
-    desc: "Lebih dari 5 tahun menangani proyek IT enterprise berskala besar di berbagai industri Indonesia.",
-  },
-  {
-    icon: Cpu,
-    title: "Teknologi Terkini",
-    desc: "Menggunakan stack teknologi terdepan: cloud-native, AI/ML, IoT, dan microservices architecture.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Tim Ahli Bersertifikat",
-    desc: "Engineer bersertifikat AWS, Google Cloud, dan Cisco siap memberikan solusi terbaik untuk bisnis Anda.",
-  },
-  {
-    icon: Headphones,
-    title: "Support 24/7",
-    desc: "Tim support responsif siap membantu 24 jam sehari, 7 hari seminggu dengan SLA 99.9% uptime.",
-  },
-];
-
-const guarantees = [
-  "Konsultasi gratis tanpa komitmen",
-  "Proposal teknis dalam 3 hari kerja",
-  "Garansi implementasi sesuai spesifikasi",
-];
+const featureIcons = [Award, Cpu, ShieldCheck, Headphones];
 
 export default function WhySodiata() {
+  const { t } = useI18n();
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -59,22 +34,20 @@ export default function WhySodiata() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-xs tracking-[0.25em] text-sodiata-cyan font-medium uppercase">
-              Mengapa Sodiata
+              {t.why.sectionTag}
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 mb-6 leading-tight">
-              Mitra Teknologi yang
+              {t.why.sectionTitle.line1}
               <br />
-              <span className="gradient-text">Anda Percaya</span>
+              <span className="gradient-text">{t.why.sectionTitle.highlight}</span>
             </h2>
             <p className="text-sodiata-text-muted leading-relaxed mb-8 max-w-lg">
-              Kami bukan sekadar vendor teknologi — kami adalah mitra strategis
-              yang memahami tantangan bisnis Anda dan memberikan solusi yang
-              terukur, andal, dan skalabel.
+              {t.why.sectionDesc}
             </p>
 
             {/* Guarantee list */}
             <div className="space-y-4">
-              {guarantees.map((g) => (
+              {t.why.guarantees.map((g) => (
                 <div key={g} className="flex items-center gap-3">
                   <div className="w-5 h-5 rounded-full bg-sodiata-cyan/15 flex items-center justify-center flex-shrink-0">
                     <svg
@@ -99,25 +72,28 @@ export default function WhySodiata() {
 
           {/* Right - Feature Cards */}
           <div className="grid sm:grid-cols-2 gap-5">
-            {features.map((f, i) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.1 * i }}
-                className="glass-card rounded-xl p-6 hover:border-sodiata-cyan/20 transition-all duration-500"
-              >
-                <div className="w-10 h-10 rounded-lg bg-sodiata-cyan/10 flex items-center justify-center mb-4">
-                  <f.icon className="w-5 h-5 text-sodiata-cyan" />
-                </div>
-                <h3 className="text-base font-semibold text-white mb-2">
-                  {f.title}
-                </h3>
-                <p className="text-sm text-sodiata-text-muted leading-relaxed">
-                  {f.desc}
-                </p>
-              </motion.div>
-            ))}
+            {t.why.features.map((f, i) => {
+              const Icon = featureIcons[i];
+              return (
+                <motion.div
+                  key={f.title}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.1 * i }}
+                  className="glass-card rounded-xl p-6 hover:border-sodiata-cyan/20 transition-all duration-500"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-sodiata-cyan/10 flex items-center justify-center mb-4">
+                    <Icon className="w-5 h-5 text-sodiata-cyan" />
+                  </div>
+                  <h3 className="text-base font-semibold text-white mb-2">
+                    {f.title}
+                  </h3>
+                  <p className="text-sm text-sodiata-text-muted leading-relaxed">
+                    {f.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

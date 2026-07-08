@@ -26,3 +26,27 @@ Stage Summary:
 - Dark enterprise theme with cyan accents, glassmorphism cards, gradient text
 - Fully responsive (mobile menu, grid layouts)
 - All interactive features verified: counters, carousel, navigation, mobile menu
+---
+Task ID: 1
+Agent: main
+Task: Add bilingual support (Indonesian + English) with language switcher
+
+Work Log:
+- Cataloged 333 translatable strings across 10 components
+- Created i18n system: React Context + useI18n hook + localStorage persistence
+- Created /src/lib/i18n/locales/id.ts (Indonesian - default) with full type safety
+- Created /src/lib/i18n/locales/en.ts (English) with matching Translations type
+- Created /src/lib/i18n/index.tsx (I18nProvider, useI18n hook, Locale type)
+- Updated page.tsx to wrap with I18nProvider
+- Updated Header.tsx with Globe language switcher button (desktop + mobile)
+- Updated all 10 components: Hero, Services, WhySodiata, Stats, TechStack, Testimonials, CTASection, Footer, WhatsAppButton
+- Services.tsx restructured: static data (icons, tech stacks, workflow icons) separated from translatable text
+- Fixed Stats.tsx syntax error (isFloat?: false → isFloat: false)
+- Build verified: compiles successfully with 0 new errors
+
+Stage Summary:
+- Language switcher (Globe icon + EN/ID label) added to Header nav bar
+- Default language: Indonesian (id)
+- Language preference persisted in localStorage
+- 333 strings translated across both languages
+- Zero external CDN references (all local assets from previous task preserved)

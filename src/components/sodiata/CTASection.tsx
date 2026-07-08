@@ -4,8 +4,10 @@ import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 
 export default function CTASection() {
+  const { t } = useI18n();
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -39,26 +41,24 @@ export default function CTASection() {
 
           <div className="relative px-8 sm:px-16 py-16 sm:py-20 text-center">
             <span className="text-xs tracking-[0.25em] text-sodiata-cyan font-medium uppercase">
-              Mulai Sekarang
+              {t.cta.sectionTag}
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-4 mb-6 leading-tight">
-              Siap Memulai
+              {t.cta.sectionTitle.line1}
               <br />
-              <span className="gradient-text">Transformasi Digital?</span>
+              <span className="gradient-text">{t.cta.sectionTitle.highlight}</span>
             </h2>
             <p className="text-sodiata-text-muted max-w-xl mx-auto text-base leading-relaxed mb-10">
-              Konsultasikan kebutuhan IT enterprise Anda bersama tim ahli
-              Sodiata. Gratis, tanpa komitmen, dan kami siapkan proposal teknis
-              dalam 3 hari kerja.
+              {t.cta.sectionDesc}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button
                 asChild
                 size="lg"
-                className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-bg font-semibold px-8 py-3.5 rounded-lg transition-all duration-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.3)] group"
+                className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-on-accent font-semibold px-8 py-3.5 rounded-lg transition-all duration-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.3)] group"
               >
                 <a href="#kontak">
-                  Konsultasi Gratis Sekarang
+                  {t.cta.primary}
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
               </Button>
@@ -74,7 +74,7 @@ export default function CTASection() {
                   rel="noopener noreferrer"
                 >
                   <MessageCircle className="mr-2 w-4 h-4 text-green-400 group-hover:scale-110 transition-transform" />
-                  Chat WhatsApp
+                  {t.cta.whatsapp}
                 </a>
               </Button>
             </div>

@@ -4,12 +4,13 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 
-const stats = [
-  { value: 50, suffix: "+", label: "PROYEK SELESAI" },
-  { value: 30, suffix: "+", label: "KLIEN PUAS" },
-  { value: 5, suffix: "+", label: "TAHUN PENGALAMAN" },
-  { value: 99.9, suffix: "%", label: "UPTIME SLA", isFloat: true },
+const statsData = [
+  { value: 50, suffix: "+", labelKey: "projects" as const },
+  { value: 30, suffix: "+", labelKey: "clients" as const },
+  { value: 5, suffix: "+", labelKey: "years" as const },
+  { value: 99.9, suffix: "%", labelKey: "uptime" as const, isFloat: true },
 ];
 
 function AnimatedCounter({
@@ -54,6 +55,7 @@ function AnimatedCounter({
 export default function Hero() {
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
+  const { t } = useI18n();
 
   const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
     if (entries[0].isIntersecting) setInView(true);
@@ -89,7 +91,7 @@ export default function Hero() {
               className="flex items-center gap-3 mb-6"
             >
               <span className="text-xs tracking-[0.2em] text-sodiata-cyan font-medium uppercase">
-                Enterprise IT Solutions
+                {t.hero.tag}
               </span>
             </motion.div>
 
@@ -99,9 +101,9 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6"
             >
-              Transformasi Digital
+              {t.hero.title.line1}
               <br />
-              Bisnis Anda Bersama{" "}
+              {t.hero.title.line2}{" "}
               <span className="gradient-text">Sodiata</span>
             </motion.h1>
 
@@ -125,10 +127,10 @@ export default function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-bg font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.3)] group"
+                className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-on-accent font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-[0_0_25px_rgba(56,189,248,0.3)] group"
               >
                 <a href="#kontak">
-                  Mulai Konsultasi
+                  {t.hero.cta.primary}
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
               </Button>
@@ -138,7 +140,7 @@ export default function Hero() {
                 size="lg"
                 className="border-sodiata-border text-sodiata-text hover:bg-sodiata-bg-card-hover hover:border-sodiata-cyan/50 hover:text-sodiata-cyan px-6 py-3 rounded-lg transition-all duration-300"
               >
-                <a href="#layanan">Lihat Layanan Kami</a>
+                <a href="#layanan">{t.hero.cta.secondary}</a>
               </Button>
             </motion.div>
 
@@ -149,9 +151,9 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="grid grid-cols-2 sm:grid-cols-4 gap-4"
             >
-              {stats.map((stat) => (
+              {statsData.map((stat) => (
                 <div
-                  key={stat.label}
+                  key={stat.labelKey}
                   className="text-center sm:text-left"
                 >
                   <p className="text-2xl sm:text-3xl font-bold text-white">
@@ -163,7 +165,7 @@ export default function Hero() {
                     />
                   </p>
                   <p className="text-xs text-sodiata-text-dim tracking-wider mt-1">
-                    {stat.label}
+                    {t.hero.stats[stat.labelKey]}
                   </p>
                 </div>
               ))}
@@ -185,14 +187,14 @@ export default function Hero() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sodiata-cyan/10 border border-sodiata-cyan/20 mb-4">
                   <Sparkles className="w-3.5 h-3.5 text-sodiata-cyan" />
                   <span className="text-[10px] font-bold tracking-wider text-sodiata-cyan uppercase">
-                    NEW
+                    {t.hero.badge.new}
                   </span>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">
-                  AI &amp; IoT Enterprise
+                  {t.hero.card.title}
                 </h3>
                 <p className="text-sm text-sodiata-text-muted leading-relaxed">
-                  Otomatisasi cerdas untuk industri manufaktur &amp; distribusi
+                  {t.hero.card.description}
                 </p>
 
                 {/* Decorative tech icons */}
@@ -200,7 +202,7 @@ export default function Hero() {
                   {["AI", "IoT", "ML", "API"].map((tag) => (
                     <span
                       key={tag}
-                      className="px-2.5 py-1 rounded-md bg-sodiata-bg/60 border border-sodiata-border text-[11px] font-mono text-sodiata-cyan/80"
+                      className="px-2.5 py-1 rounded-md bg-sodiata-elevated/60 border border-sodiata-border text-[11px] font-mono text-sodiata-cyan/80"
                     >
                       {tag}
                     </span>
@@ -219,7 +221,7 @@ export default function Hero() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
           <span className="text-[10px] tracking-[0.2em] text-sodiata-text-dim uppercase">
-            Scroll to Explore
+            {t.hero.scroll.label}
           </span>
           <ChevronDown className="w-4 h-4 text-sodiata-cyan scroll-bounce" />
         </motion.div>

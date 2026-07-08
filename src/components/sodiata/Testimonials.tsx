@@ -3,38 +3,10 @@
 import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
-
-const testimonials = [
-  {
-    name: "Rina Wulandari",
-    role: "Head of Digital",
-    company: "Bank Digital Nusantara",
-    quote:
-      "Tim Sodiata sangat responsif dan solusi AI chatbot mereka meningkatkan kepuasan pelanggan kami secara signifikan. Implementasi selesai tepat waktu dan sesuai spesifikasi.",
-    metric: "+35%",
-    metricLabel: "CUSTOMER SATISFACTION",
-  },
-  {
-    name: "Hendra Kurniawan",
-    role: "IT Director",
-    company: "PT Maju Bersama Industri",
-    quote:
-      "Sodiata berhasil mengintegrasikan sistem ERP kami dengan marketplace dalam waktu 3 bulan. Efisiensi operasional meningkat 40% — hasil yang jauh melampaui ekspektasi kami.",
-    metric: "+40%",
-    metricLabel: "OPERATIONAL EFFICIENCY",
-  },
-  {
-    name: "Rudi Prasetyo",
-    role: "Plant Manager",
-    company: "PT Energi Nusantara",
-    quote:
-      "Implementasi IoT monitoring dari Sodiata membantu kami mengurangi downtime mesin hingga 60%. Tim mereka sangat profesional dan responsif sepanjang proses implementasi.",
-    metric: "-60%",
-    metricLabel: "MACHINE DOWNTIME",
-  },
-];
+import { useI18n } from "@/lib/i18n";
 
 export default function Testimonials() {
+  const { t } = useI18n();
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
   const [active, setActive] = useState(0);
@@ -50,10 +22,10 @@ export default function Testimonials() {
     return () => obs.disconnect();
   }, []);
 
-  const prev = () => setActive((p) => (p === 0 ? testimonials.length - 1 : p - 1));
-  const next = () => setActive((p) => (p === testimonials.length - 1 ? 0 : p + 1));
+  const prev = () => setActive((p) => (p === 0 ? t.testimonials.items.length - 1 : p - 1));
+  const next = () => setActive((p) => (p === t.testimonials.items.length - 1 ? 0 : p + 1));
 
-  const t = testimonials[active];
+  const current = t.testimonials.items[active];
 
   return (
     <section ref={ref} className="py-24 relative">
@@ -68,17 +40,15 @@ export default function Testimonials() {
           className="text-center mb-16"
         >
           <span className="text-xs tracking-[0.25em] text-sodiata-cyan font-medium uppercase">
-            Testimoni Klien
+            {t.testimonials.sectionTag}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 mb-4 leading-tight">
-            Apa Kata
+            {t.testimonials.sectionTitle.line1}
             <br />
-            <span className="gradient-text">Klien Kami</span>
+            <span className="gradient-text">{t.testimonials.sectionTitle.highlight}</span>
           </h2>
           <p className="text-sodiata-text-muted max-w-2xl mx-auto text-base leading-relaxed">
-            Kepercayaan klien adalah aset terbesar kami. Berikut pengalaman
-            nyata dari mitra bisnis yang telah berhasil bertransformasi bersama
-            Sodiata.
+            {t.testimonials.sectionDesc}
           </p>
         </motion.div>
 
@@ -96,10 +66,10 @@ export default function Testimonials() {
             {/* Metric badge */}
             <div className="inline-flex items-center gap-2 mb-6">
               <span className="text-2xl font-bold text-sodiata-cyan">
-                {t.metric}
+                {current.metric}
               </span>
               <span className="text-[10px] tracking-wider text-sodiata-text-dim font-medium">
-                {t.metricLabel}
+                {current.metricLabel}
               </span>
             </div>
 
@@ -113,12 +83,12 @@ export default function Testimonials() {
                 transition={{ duration: 0.3 }}
               >
                 <blockquote className="text-base sm:text-lg text-sodiata-text leading-relaxed mb-8 italic">
-                  &ldquo;{t.quote}&rdquo;
+                  &ldquo;{current.quote}&rdquo;
                 </blockquote>
                 <div>
-                  <p className="font-semibold text-white">{t.name}</p>
+                  <p className="font-semibold text-white">{current.name}</p>
                   <p className="text-sm text-sodiata-text-muted">
-                    {t.role} · {t.company}
+                    {current.role} · {current.company}
                   </p>
                 </div>
               </motion.div>
@@ -127,7 +97,7 @@ export default function Testimonials() {
             {/* Navigation */}
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-sodiata-border">
               <div className="flex gap-2">
-                {testimonials.map((_, i) => (
+                {t.testimonials.items.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setActive(i)}
@@ -144,14 +114,14 @@ export default function Testimonials() {
                 <button
                   onClick={prev}
                   className="w-10 h-10 rounded-full border border-sodiata-border flex items-center justify-center text-sodiata-text-muted hover:text-sodiata-cyan hover:border-sodiata-cyan/30 transition-all duration-300"
-                  aria-label="Testimoni sebelumnya"
+                  aria-label={t.testimonials.aria.previous}
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={next}
                   className="w-10 h-10 rounded-full border border-sodiata-border flex items-center justify-center text-sodiata-text-muted hover:text-sodiata-cyan hover:border-sodiata-cyan/30 transition-all duration-300"
-                  aria-label="Testimoni berikutnya"
+                  aria-label={t.testimonials.aria.next}
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

@@ -2,33 +2,13 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
 
-const stats = [
-  {
-    value: 50,
-    suffix: "+",
-    label: "Proyek Selesai",
-    sub: "Delivered on time & budget",
-  },
-  {
-    value: 30,
-    suffix: "+",
-    label: "Klien Puas",
-    sub: "Enterprise clients served",
-  },
-  {
-    value: 5,
-    suffix: "+",
-    label: "Tahun Pengalaman",
-    sub: "In enterprise IT solutions",
-  },
-  {
-    value: 99.9,
-    suffix: "%",
-    label: "Uptime SLA",
-    sub: "Guaranteed service availability",
-    isFloat: true,
-  },
+const statsMeta = [
+  { value: 50, suffix: "+", labelKey: 0 as const, isFloat: false },
+  { value: 30, suffix: "+", labelKey: 1 as const },
+  { value: 5, suffix: "+", labelKey: 2 as const },
+  { value: 99.9, suffix: "%", labelKey: 3 as const, isFloat: true },
 ];
 
 function AnimatedCounter({
@@ -69,6 +49,7 @@ function AnimatedCounter({
 }
 
 export default function Stats() {
+  const { t } = useI18n();
   const ref = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -97,19 +78,19 @@ export default function Stats() {
           className="text-center mb-16"
         >
           <span className="text-xs tracking-[0.25em] text-sodiata-cyan font-medium uppercase">
-            Pencapaian Kami
+            {t.stats.sectionTag}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3 leading-tight">
-            Angka yang
+            {t.stats.sectionTitle.line1}
             <br />
-            <span className="gradient-text">Berbicara</span>
+            <span className="gradient-text">{t.stats.sectionTitle.highlight}</span>
           </h2>
         </motion.div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, i) => (
+          {statsMeta.map((stat, i) => (
             <motion.div
-              key={stat.label}
+              key={stat.labelKey}
               initial={{ opacity: 0, y: 40 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.1 * i }}
@@ -124,9 +105,9 @@ export default function Stats() {
                 />
               </p>
               <p className="text-sm font-medium text-sodiata-text mb-1">
-                {stat.label}
+                {t.stats.items[stat.labelKey].label}
               </p>
-              <p className="text-xs text-sodiata-text-dim">{stat.sub}</p>
+              <p className="text-xs text-sodiata-text-dim">{t.stats.items[stat.labelKey].sub}</p>
             </motion.div>
           ))}
         </div>

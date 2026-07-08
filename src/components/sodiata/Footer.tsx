@@ -1,14 +1,8 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { Linkedin, Instagram, Twitter } from "lucide-react";
-
-const footerLinks = [
-  { label: "Beranda", href: "#beranda" },
-  { label: "Layanan", href: "#layanan" },
-  { label: "Hubungi Kami", href: "#kontak" },
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-];
+import { Logo } from "@/components/sodiata/Logo";
 
 const socials = [
   { icon: Linkedin, label: "LinkedIn", href: "#" },
@@ -17,37 +11,39 @@ const socials = [
 ];
 
 export default function Footer() {
+  const { t } = useI18n();
+
+  const footerLinks = [
+    { label: t.footer.links.home, href: "#beranda" },
+    { label: t.footer.links.services, href: "#layanan" },
+    { label: t.footer.links.contact, href: "#kontak" },
+    { label: t.footer.links.privacy, href: "#" },
+    { label: t.footer.links.terms, href: "#" },
+  ];
+
   return (
-    <footer className="border-t border-sodiata-border bg-sodiata-bg-card/30">
+    <footer className="border-t border-sodiata-border bg-sodiata-elevated/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-sodiata-cyan to-cyan-600 flex items-center justify-center font-bold text-sodiata-bg text-sm">
-                S
-              </div>
-              <div className="flex flex-col leading-tight">
-                <span className="text-base font-bold tracking-wide text-white">
-                  SODIATA
-                </span>
-                <span className="text-[9px] tracking-[0.2em] text-sodiata-text-dim uppercase">
-                  Solusi Digital Automata
-                </span>
-              </div>
+            <div className="flex items-center gap-2.5 mb-4">
+              <Logo className="h-8 w-auto" />
+              <span className="text-[9px] tracking-[0.2em] text-sodiata-text-dim uppercase">
+                {t.footer.brand.subtitle}
+              </span>
             </div>
             <p className="text-sm text-sodiata-text-muted leading-relaxed mb-4 max-w-sm">
-              Mitra teknologi terpercaya untuk transformasi digital enterprise
-              Indonesia.
+              {t.footer.description}
             </p>
             <p className="text-xs text-sodiata-text-dim">
-              Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 12190
+              {t.footer.address}
             </p>
           </div>
 
           {/* Links */}
           <div>
-            <h4 className="text-sm font-semibold text-white mb-4">Links</h4>
+            <h4 className="text-sm font-semibold text-white mb-4">{t.footer.links.title}</h4>
             <nav className="flex flex-col gap-2.5">
               {footerLinks.map((link) => (
                 <a
@@ -64,7 +60,7 @@ export default function Footer() {
           {/* Social */}
           <div>
             <h4 className="text-sm font-semibold text-white mb-4">
-              Ikuti Kami
+              {t.footer.social.title}
             </h4>
             <div className="flex gap-3">
               {socials.map((s) => (
@@ -84,7 +80,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="mt-10 pt-6 border-t border-sodiata-border">
           <p className="text-xs text-sodiata-text-dim text-center">
-            © 2026 PT SOLUSI DIGITAL AUTOMATA
+            {t.footer.copyright}
           </p>
         </div>
       </div>

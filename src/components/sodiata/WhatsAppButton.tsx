@@ -1,10 +1,12 @@
 "use client";
 
+import { useI18n } from "@/lib/i18n";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function WhatsAppButton() {
+  const { t } = useI18n();
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -17,25 +19,25 @@ export default function WhatsAppButton() {
             exit={{ opacity: 0, x: 10, scale: 0.9 }}
             className="absolute right-14 top-1/2 -translate-y-1/2 glass-card rounded-lg px-3 py-2 whitespace-nowrap"
           >
-            <span className="text-sm text-white">Chat WhatsApp</span>
+            <span className="text-sm text-sodiata-text">{t.whatsapp.tooltip}</span>
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.a
-        href="https://wa.me/"
+        href="https://wa.me/6281317926710"
         target="_blank"
         rel="noopener noreferrer"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
-        className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300"
-        aria-label="Chat via WhatsApp"
+        className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-[#fff] px-4 py-3 rounded-full shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300"
+        aria-label={t.whatsapp.aria}
       >
         <MessageCircle className="w-5 h-5" />
         <span className="text-sm font-medium hidden sm:inline">
-          Chat WhatsApp
+          {t.whatsapp.button}
         </span>
       </motion.a>
     </div>

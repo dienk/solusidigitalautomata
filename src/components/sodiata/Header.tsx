@@ -2,25 +2,32 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Globe } from "lucide-react";
+import { Logo } from "@/components/sodiata/Logo";
 import { Button } from "@/components/ui/button";
-
-const navLinks = [
-  { label: "Beranda", href: "#beranda" },
-  { label: "Tentang Kami", href: "#tentang" },
-  { label: "Layanan", href: "#layanan" },
-  { label: "Hubungi Kami", href: "#kontak" },
-];
+import { useI18n } from "@/lib/i18n";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t, locale, setLocale } = useI18n();
+
+  const navLinks = [
+    { label: t.header.nav.home, href: "#beranda" },
+    { label: t.header.nav.about, href: "#tentang" },
+    { label: t.header.nav.services, href: "#layanan" },
+    { label: t.header.nav.contact, href: "#kontak" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const toggleLocale = () => {
+    setLocale(locale === "id" ? "en" : "id");
+  };
 
   return (
     <motion.header
@@ -35,18 +42,11 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Logo */}
-        <a href="#beranda" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-sodiata-cyan to-cyan-600 flex items-center justify-center font-bold text-sodiata-bg text-sm">
-            S
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-lg font-bold tracking-wide text-white">
-              SODIATA
-            </span>
-            <span className="text-[10px] tracking-[0.2em] text-sodiata-text-muted uppercase">
-              Solusi Digital Automata
-            </span>
-          </div>
+        <a href="#beranda" className="flex items-center gap-2.5 group">
+          <Logo className="h-8 w-auto sm:h-9" />
+          <span className="hidden sm:block text-[10px] tracking-[0.2em] text-sodiata-text-muted uppercase">
+            {t.header.brand.subtitle}
+          </span>
         </a>
 
         {/* Desktop Navigation */}
@@ -60,22 +60,42 @@ export default function Header() {
               {link.label}
             </a>
           ))}
+
+          {/* Language Switcher */}
+          <button
+            onClick={toggleLocale}
+            className="flex items-center gap-1.5 text-sm text-sodiata-text-muted hover:text-sodiata-cyan transition-colors duration-300 px-2.5 py-1.5 rounded-lg border border-sodiata-border hover:border-sodiata-cyan/30"
+            aria-label={`Switch to ${locale === "id" ? "English" : "Bahasa Indonesia"}`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span className="font-medium uppercase text-xs">{locale === "id" ? "EN" : "ID"}</span>
+          </button>
+
           <Button
             asChild
-            className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-bg font-semibold text-sm px-5 py-2 rounded-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+            className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-on-accent font-semibold text-sm px-5 py-2 rounded-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(56,189,248,0.3)]"
           >
-            <a href="#kontak">Konsultasi Gratis</a>
+            <a href="#kontak">{t.header.cta}</a>
           </Button>
         </nav>
 
         {/* Mobile Toggle */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden text-white p-2"
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={toggleLocale}
+            className="text-sodiata-text-muted p-2"
+            aria-label={`Switch to ${locale === "id" ? "English" : "Bahasa Indonesia"}`}
+          >
+            <Globe className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="text-white p-2"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -100,10 +120,10 @@ export default function Header() {
               ))}
               <Button
                 asChild
-                className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-bg font-semibold w-full mt-2"
+                className="bg-sodiata-cyan hover:bg-cyan-400 text-sodiata-on-accent font-semibold w-full mt-2"
               >
                 <a href="#kontak" onClick={() => setMobileOpen(false)}>
-                  Konsultasi Gratis
+                  {t.header.cta}
                 </a>
               </Button>
             </div>
